@@ -216,6 +216,18 @@ int main(){
 				ctx.ymax = my + dy;
 				render(&ctx);
 			}
+			else if ( ctx.event.key.keysym.sym == SDLK_x ){ 
+				// zoom out
+				double mx = (ctx.xmin + ctx.xmax)/2.0;
+				double my = (ctx.ymin + ctx.ymax)/2.0;
+				double dx = (ctx.xmax - ctx.xmin)*0.75;
+				double dy = (ctx.ymax - ctx.ymin)*0.75;
+				ctx.xmin = mx - dx;
+				ctx.xmax = mx + dx;
+				ctx.ymin = my - dy;
+				ctx.ymax = my + dy;
+				render(&ctx);
+			}
 		}
 		SDL_PumpEvents();
 		/*
