@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <unistd.h>
 #include "SDL.h"
 #include "color.h"
 
@@ -13,6 +14,9 @@
 #define WIDTH 400
 #define HEIGHT 400
 #define DEPTH 4
+
+#define FPS 60
+#define TICKS_PER_FRAME 1000 / FPS
 
 struct View {
 	int width, height, depth;
@@ -124,8 +128,12 @@ int main(int argc, char **argv){
 	ctx.texture = SDL_CreateTexture(ctx.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, ctx.view.width, ctx.view.height);
 	render(&ctx);
 
+	size_t startTime, elapsedTime;
+
 	// Recolher eventos
 	while (1){
+		startTime = SDL_GetTicks();
+
 		SDL_PollEvent(&ctx.event);
 		if (ctx.event.type == SDL_QUIT){
 			finalizar(&ctx);
@@ -190,11 +198,15 @@ int main(int argc, char **argv){
 				render(&ctx);
 			}
 		}
-		SDL_PumpEvents();
 		/*
 		if (SDL_GetMouseState(&ctx.curPos, &ctx.curPos[1]) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
 			// Ação do mouse 
 		}
 		*/
+		elapsedTime = SDL_GetTicks() - startTime;
+		if ( elapsedTime < TICKS_PER_FRAME) {
+			SDL_Delay(TICKS_PER_FRAME - elapsedTime);
+		}
+
 	}
 }
